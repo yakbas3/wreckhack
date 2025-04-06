@@ -1,5 +1,7 @@
+import { Platform } from 'react-native';
+
 // Development URL - use this when testing locally
-const DEV_URL = 'http://localhost:8000';
+const DEV_URL = 'http://128.61.121.211:8000';  // Your actual physical IP address
 
 // Production URL - replace this with your deployed server URL when ready
 const PROD_URL = 'https://your-production-server.com';

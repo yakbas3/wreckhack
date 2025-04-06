@@ -1,5 +1,13 @@
 {
   "dependencies": {
-    "@types/react-navigation": "^3.4.0"
+    "@react-navigation/bottom-tabs": "^7.3.9",
+    "@types/react-navigation": "^3.4.0",
+    "expo": "^52.0.44",
+    "react-native-safe-area-context": "^5.3.0",
+    "react-native-screens": "^4.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/react": "~18.3.12"
   }
 }

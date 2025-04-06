@@ -40,12 +40,6 @@ export default function ChatbotScreen() {
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
       setIsConnected(!!state.isConnected);
-      
-      // If we're in development and connected to WiFi, try to use the local IP
-      if (__DEV__ && state.type === 'wifi' && (state as NetInfoWifiState).details?.ipAddress) {
-        const localIP = (state as NetInfoWifiState).details.ipAddress;
-        updateBaseUrl(`http://${localIP}:8000`);
-      }
     });
 
     return () => {
@@ -176,6 +170,7 @@ export default function ChatbotScreen() {
     setIsLoading(true);
 
     try {
+      console.log('Sending request to:', API_URLS.chat);
       const response = await fetch(API_URLS.chat, {
         method: 'POST',
         headers: {
@@ -195,7 +190,11 @@ export default function ChatbotScreen() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
-        console.error('API Error:', errorData);
+        console.error('API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData
+        });
         throw new Error(errorData.detail || 'Network response was not ok');
       }
 
@@ -214,10 +213,27 @@ export default function ChatbotScreen() {
       await speakResponse(botResponse);
       
     } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Sorry, there was an error processing your message.';
-      setMessages(prev => [...prev, { text: errorMessage, isUser: false }]);
-      await speakResponse(errorMessage);
+      console.error('Error in chat request:', error);
+      let errorMessage = 'An error occurred while processing your request.';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      if (!isConnected) {
+        errorMessage = 'No internet connection. Please check your connection and try again.';
+      }
+      
+      setMessages(prev => [...prev, {
+        text: errorMessage,
+        isUser: false
+      }]);
+      
+      Alert.alert(
+        'Error',
+        errorMessage,
+        [{ text: 'OK' }]
+      );
     } finally {
       setIsLoading(false);
     }

@@ -16,7 +16,7 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+            let iconName: keyof typeof Ionicons.glyphMap = 'stats-chart-outline';
 
             if (route.name === 'Dashboard') {
               iconName = focused ? 'stats-chart' : 'stats-chart-outline';
@@ -26,26 +26,29 @@ export default function App() {
               iconName = focused ? 'analytics' : 'analytics-outline';
             }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={24} color={color} />;
           },
           tabBarActiveTintColor: '#4CAF50',
           tabBarInactiveTintColor: 'gray',
+          tabBarStyle: {
+            height: 60,
+            paddingBottom: 8,
+            paddingTop: 8,
+          },
+          headerShown: false,
         })}
       >
         <Tab.Screen 
           name="Dashboard" 
           component={DashboardScreen}
-          options={{ headerShown: false }}
         />
         <Tab.Screen 
           name="Chat" 
           component={ChatbotScreen}
-          options={{ headerShown: false }}
         />
         <Tab.Screen 
           name="Insights" 
           component={InsightsScreen}
-          options={{ headerShown: false }}
         />
       </Tab.Navigator>
       <StatusBar style="auto" />
